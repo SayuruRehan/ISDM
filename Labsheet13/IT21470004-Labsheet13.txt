@@ -1,0 +1,174 @@
+--1&2--
+CREATE TABLE Department(
+	dno int,
+	dname varchar(50),
+	CONSTRAINT Department_PK PRIMARY KEY(dno)
+);
+
+CREATE TABLE Project(
+	pno int,
+	pname varchar(20),
+	location varchar(20),
+	CONSTRAINT Project_PK PRIMARY KEY(pno)
+);
+
+CREATE TABLE Employee(
+	eno int,
+	NIC char(10),
+	ename varchar(50),
+	address varchar(50),
+	dnumber int,
+	CONSTRAINT Employee_PK PRIMARY KEY(eno),
+	CONSTRAINT Employee_dno_FK FOREIGN KEY(dnumber) REFERENCES Department(dno)
+);
+
+CREATE TABLE Work_on(
+	eno int,
+	pno int,
+	hired_date datetime,
+	hours int,
+	CONSTRAINT Work_on_PK PRIMARY KEY(eno, pno),
+	CONSTRAINT Work_on_eno_FK FOREIGN KEY(eno) REFERENCES Employee(eno),
+	CONSTRAINT Work_on_pno_FK FOREIGN KEY(pno) REFERENCES Project(pno)
+);
+
+
+--3--
+DROP TABLE Work_on;
+
+DROP TABLE Employee;
+
+DROP TABLE Project;
+
+DROP TABLE Department;
+
+
+--4--
+CREATE TABLE Department(
+	dno int,
+	dname varchar(50),
+	CONSTRAINT Department_dname_check CHECK(dname IN('Headquarters', 'Administration', 'Research')),
+	CONSTRAINT Department_PK PRIMARY KEY(dno)
+);
+
+CREATE TABLE Project(
+	pno int,
+	pname varchar(20),
+	location varchar(20),
+	CONSTRAINT Project_PK PRIMARY KEY(pno)
+);
+
+CREATE TABLE Employee(
+	eno int, 
+	NIC char(10),
+	ename varchar(50) NOT NULL,
+	address varchar(50),
+	dnumber int,
+	CONSTRAINT Employee_eno_check CHECK(eno LIKE '[0-9][0-9][0-9]'),
+	CONSTRAINT Employee_NIC_check CHECK(NIC LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][V-v]'),
+	CONSTRAINT Employee_PK PRIMARY KEY(eno),
+	CONSTRAINT Employee_dno_FK FOREIGN KEY(dnumber) REFERENCES Department(dno)
+);
+
+CREATE TABLE Work_on(
+	eno int,
+	pno int,
+	hired_date datetime,
+	hours int CHECK(hours > 0),
+	CONSTRAINT Work_on_PK PRIMARY KEY(eno, pno),
+	CONSTRAINT Work_on_eno_FK FOREIGN KEY(eno) REFERENCES Employee(eno),
+	CONSTRAINT Work_on_pno_FK FOREIGN KEY(pno) REFERENCES Project(pno)
+);
+
+
+--5--
+INSERT INTO Department
+VALUES (1, 'Headquarters');
+
+INSERT INTO Department
+VALUES (4, 'Administration');
+
+INSERT INTO Department
+VALUES (5, 'Research');
+
+
+INSERT INTO Project
+VALUES (1, 'Road Construction', 'Bellaire');
+
+INSERT INTO Project
+VALUES (2, 'Power plant', 'Sugarland');
+
+INSERT INTO Project
+VALUES (3, 'Reproduction', 'Houston');
+
+INSERT INTO Project
+VALUES (4, 'Recycling', 'Stafford');
+
+
+INSERT INTO Employee
+VALUES (200, '901250087V', 'Smith, John B.', '731 Fondren, Houston', 5);
+
+INSERT INTO Employee
+VALUES (101, '895290452V', 'Wrong, Franklin T.', '638 Voss, Houston', 5);
+
+INSERT INTO Employee
+VALUES (102, '923859070V', 'Zelaya, Alicia J.', '33321 Castle, Spring', 4);
+
+INSERT INTO Employee
+VALUES (103, '918257988V', 'Wallace, Jennifer S.', '291 Berry, Bellaria', 4);
+
+INSERT INTO Employee
+VALUES (104, '904850045V', 'Narayan, Remesh K.', '975 Fire Oak, Humble', 5);
+
+INSERT INTO Employee
+VALUES (105, '889950600V', 'English, Joyce A.', '5631 Rice, Houston', 1);
+
+INSERT INTO Employee
+VALUES (106, '915850123V', 'Jabbar, Ahamad V.', '980 Dallas, Houston', 1);
+
+
+INSERT INTO Work_on
+VALUES (100, 1, 12/04/2011, 12);
+
+INSERT INTO Work_on
+VALUES (100, 2, 25/02/2011, 1);
+
+INSERT INTO Work_on
+VALUES (100, 3, 15/05/2011, 20);
+
+INSERT INTO Work_on
+VALUES (101, 1, 02/06/2011, 50);
+
+INSERT INTO Work_on
+VALUES (102, 4, 08/06/2011, 5);
+
+INSERT INTO Work_on
+VALUES (103, 3, 12/07/2011, 3);
+
+INSERT INTO Work_on
+VALUES (104, 2, 20/07/2011, 40);
+
+INSERT INTO Work_on
+VALUES (105, 3, 18/05/2011, 1);
+
+INSERT INTO Work_on
+VALUES (105, 1, 01/07/2011, 11);
+
+INSERT INTO Work_on
+VALUES (106, 4, 27/06/2011, 1);
+
+
+--6--
+DELETE
+FROM Work_on
+WHERE eno = 103;
+
+DELETE
+FROM Employee
+WHERE eno = 103;
+
+
+--7--
+UPDATE Project
+SET pname = 'Water Recycling'
+WHERE pno = 4;
